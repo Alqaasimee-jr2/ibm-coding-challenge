@@ -170,7 +170,7 @@ This project is built and optimized specifically for the **IBM Bob 2.0 Hackathon
   - Permissive MIT open-source validation via `expressjs/cors` (`demo-real-repo/`).
 
 ### 🪙 Bobcoin Resource Optimization Strategy
-- **40 Bobcoin Budget Awareness:** All local testing, CLI runs (`node guardian.js`), and test executions (`npm test`) run locally on zero Bobcoins to protect the 40-coin allocation.
+- **40 Bobcoins Allocation (40/40):** All local testing, CLI runs (`node guardian.js`), and test executions (`npm test`) run locally on zero Bobcoins to protect the 40-coin allocation.
 - **High-Leverage AI Invocations:** Bob AI interactions were focused exclusively on high-leverage architectural orchestration and test generation.
 - **Usage Monitoring:** Monitored in Bob IDE under **Settings → General** to ensure sustainable execution throughout the hackathon lifecycle.
 
