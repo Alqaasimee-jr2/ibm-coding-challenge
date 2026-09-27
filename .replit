@@ -1,6 +1,20 @@
-run = "npm start"
 entrypoint = "guardian.js"
-hidden = [".git", "node_modules"]
+run = "node guardian.js"
+
+[workflows]
+run = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node guardian.js"
+
+[deployment]
+run = ["sh", "-c", "node guardian.js"]
 
 [nix]
 channel = "stable-23_11"
