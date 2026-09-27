@@ -1,0 +1,6 @@
+run = "npm start"
+entrypoint = "guardian.js"
+hidden = [".git", "node_modules"]
+
+[nix]
+channel = "stable-23_11"
