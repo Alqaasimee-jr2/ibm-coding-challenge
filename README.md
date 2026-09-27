@@ -1,7 +1,8 @@
 # PR Pre-Flight Guardian 🛡️
 
-> **IBM Bob 2.0 Hackathon Submission**
-> An autonomous Node.js CLI that chains static security scanning, automated test generation, and PR documentation generation into a single unified pre-flight command.
+> **IBM Bob 2.0 Hackathon Submission**  
+> An autonomous Node.js CLI that chains static security scanning, automated test generation, and PR documentation generation into a single unified pre-flight command.  
+> 🔗 **GitHub Repository:** [https://github.com/Alqaasimee-jr2/ibm-coding-challenge](https://github.com/Alqaasimee-jr2/ibm-coding-challenge)
 
 ---
 
@@ -74,12 +75,18 @@ PR Pre-Flight Guardian explicitly chains three autonomous agentic tasks into a s
 - Node.js (v18+)
 - npm
 
-### 1. Install Dependencies
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Alqaasimee-jr2/ibm-coding-challenge.git
+cd ibm-coding-challenge
+```
+
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 2. Run the Full Pre-Flight Guardian Pipeline (Exact Command)
+### 3. Run the Full Pre-Flight Guardian Pipeline (Exact Command)
 ```bash
 node guardian.js --repo ./target-repo
 ```
@@ -89,7 +96,7 @@ node guardian.js --repo ./target-repo
 npm run guardian
 ```
 
-### 3. Run Individual Components
+### 4. Run Individual Components
 - **Run Security Scan Only:**
   ```bash
   node security-scan.js --repo ./target-repo
