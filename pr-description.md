@@ -1,8 +1,8 @@
 # Pull Request Pre-Flight Inspection & Readiness Report
 
-![Status](https://img.shields.io/badge/PR--Pre--Flight-CLEAN_PASSED-brightgreen)
-> **Target Repository:** `./demo-real-repo`  
-> **Audited At:** `2026-09-27T06:15:04.189Z`  
+![Status](https://img.shields.io/badge/PR--Pre--Flight-ACTION_REQUIRED-red)
+> **Target Repository:** `./target-repo`  
+> **Audited At:** `2026-09-27T06:47:58.542Z`  
 > **Orchestrator:** IBM Bob IDE Agentic Pre-Flight Guardian  
 
 ---
@@ -11,8 +11,8 @@
 
 | Category | Status | Metrics | Verdict |
 | :--- | :---: | :--- | :---: |
-| **Static Security Scan** | ✅ PASSED | 0 findings (0 Critical, 0 High) | CLEAR |
-| **Automated Unit Tests** | ✅ PASSED | 3/3 tests green (2599ms) | CLEAR |
+| **Static Security Scan** | ⚠️ VULNERABILITIES FOUND | 3 findings (1 Critical, 2 High) | BLOCKED |
+| **Automated Unit Tests** | ✅ PASSED | 3/3 tests green (3204ms) | CLEAR |
 | **Data Compliance** | ✅ VERIFIED | 100% Synthetic & Permissive Open Source | CLEAR |
 
 ---
@@ -21,7 +21,15 @@
 
 | Severity | Rule ID | Location | Details & Action | Suggested Fix |
 | :--- | :--- | :--- | :--- | :--- |
-| **CLEAN** | `ALL_CLEAR` | `N/A` | No static security vulnerabilities detected in scanned codebase. | None required |
+| **HIGH** | `HARDCODED_SECRET` | `target-repo/config/auth.js:3` | Potential hardcoded credential or secret token detected in source code.<br/>**Action:** Rotate token immediately. Extract credential to environment variables (e.g. process.env.JWT_SECRET) or a secret manager. | ```js
+jwtSecret: process.env.JWT_SECRET || "",
+``` |
+| **HIGH** | `SQL_INJECTION` | `target-repo/services/database.js:9` | Dynamic query construction with direct string concatenation detected.<br/>**Action:** Use parameterized queries or prepared statements (e.g., db.query("... WHERE username = ?", [username])) to safely escape inputs. | ```js
+const query = "SELECT id, username, email, role FROM users WHERE username = ? AND active = 1"; // Pass param via db.execute(query, [username])
+``` |
+| **CRITICAL** | `UNSAFE_EVAL_EXEC` | `target-repo/services/dynamicRuleEvaluator.js:4` | Dangerous dynamic evaluation or shell command execution detected.<br/>**Action:** Eliminate eval() / exec(). Parse and evaluate mathematical expressions using a sandboxed AST parser or safe arithmetic tokenizer. | ```js
+const result = safeEvaluateFormula(formulaStr) /* Use AST parser */;
+``` |
 
 ---
 
@@ -32,19 +40,19 @@
 - **Summary Metrics:**
   - Total Suites: `1 passed, 1 total`
   - Total Tests: `3 passed, 0 failed, 3 total`
-  - Execution Time: `2599ms`
+  - Execution Time: `3204ms`
 
 ```text
 PASS __tests__/pricingEngine.test.js
   PricingEngine - calculateOrderTotal
-    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (7 ms)
+    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (24 ms)
     √ correctly stacks Tier 3 (20%) volume discount with loyalty member discount (5%) (2 ms)
-    √ enforces validation boundaries and rejects invalid quantity and price inputs (21 ms)
+    √ enforces validation boundaries and rejects invalid quantity and price inputs (64 ms)
 
 Test Suites: 1 passed, 1 total
 Tests:       3 passed, 3 total
 Snapshots:   0 total
-Time:        0.942 s, estimated 1 s
+Time:        1.381 s
 Ran all test suites matching /__tests__/i.
 ```
 

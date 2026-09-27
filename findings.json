@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "file": "target-repo/config/auth.js",
+    "line": 3,
+    "issue": "Hardcoded Secret / API Token",
+    "severity": "HIGH",
+    "ruleId": "HARDCODED_SECRET",
+    "description": "Potential hardcoded credential or secret token detected in source code.",
+    "remediation": "Rotate token immediately. Extract credential to environment variables (e.g. process.env.JWT_SECRET) or a secret manager.",
+    "suggestedPatch": "jwtSecret: process.env.JWT_SECRET || \"\",",
+    "snippet": "jwtSecret: \"sk_live_51M0BobHackathonSecretKey99887766\","
+  },
+  {
+    "file": "target-repo/services/database.js",
+    "line": 9,
+    "issue": "SQL Injection via String Concatenation",
+    "severity": "HIGH",
+    "ruleId": "SQL_INJECTION",
+    "description": "Dynamic query construction with direct string concatenation detected.",
+    "remediation": "Use parameterized queries or prepared statements (e.g., db.query(\"... WHERE username = ?\", [username])) to safely escape inputs.",
+    "suggestedPatch": "const query = \"SELECT id, username, email, role FROM users WHERE username = ? AND active = 1\"; // Pass param via db.execute(query, [username])",
+    "snippet": "const query = \"SELECT id, username, email, role FROM users WHERE username = '\" + username + \"' AND active = 1\";"
+  },
+  {
+    "file": "target-repo/services/dynamicRuleEvaluator.js",
+    "line": 4,
+    "issue": "Unsafe Dynamic Code Execution (eval/exec)",
+    "severity": "CRITICAL",
+    "ruleId": "UNSAFE_EVAL_EXEC",
+    "description": "Dangerous dynamic evaluation or shell command execution detected.",
+    "remediation": "Eliminate eval() / exec(). Parse and evaluate mathematical expressions using a sandboxed AST parser or safe arithmetic tokenizer.",
+    "suggestedPatch": "const result = safeEvaluateFormula(formulaStr) /* Use AST parser */;",
+    "snippet": "const result = eval(formulaStr);"
+  }
+]

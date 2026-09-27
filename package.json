@@ -4,6 +4,7 @@
   "description": "PR Pre-Flight Guardian - Automated security scan, test generation & PR documentation pipeline",
   "main": "guardian.js",
   "scripts": {
+    "start": "node guardian.js",
     "test": "jest __tests__",
     "scan": "node security-scan.js",
     "guardian": "node guardian.js"

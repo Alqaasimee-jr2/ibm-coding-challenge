@@ -97,14 +97,14 @@ function runTestSuite() {
   
   const startTime = Date.now();
   if (fs.existsSync(jestBin)) {
-    result = spawnSync(process.execPath, [jestBin, '__tests__', '--no-color'], {
+    result = spawnSync(process.execPath, [jestBin, '__tests__', '--testPathIgnorePatterns', 'files to add to bob', '--no-color'], {
       encoding: 'utf-8',
       cwd: __dirname
     });
   } else {
     const isWindows = process.platform === 'win32';
     const npxCmd = isWindows ? 'npx.cmd' : 'npx';
-    result = spawnSync(npxCmd, ['jest', '__tests__', '--no-color'], {
+    result = spawnSync(npxCmd, ['jest', '__tests__', '--testPathIgnorePatterns', 'files to add to bob', '--no-color'], {
       encoding: 'utf-8',
       cwd: __dirname
     });

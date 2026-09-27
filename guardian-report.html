@@ -160,8 +160,8 @@
         </div>
       </div>
       <div>
-        <span class="verdict-tag verdict-clean">
-          ✔ Verdict: Clean (Ready to Merge)
+        <span class="verdict-tag verdict-blocked">
+          🚨 Verdict: Action Required
         </span>
       </div>
     </div>
@@ -169,12 +169,12 @@
     <div class="grid-stats">
       <div class="stat-card">
         <div class="stat-label">Target Repository</div>
-        <div class="stat-value" style="font-size: 18px; color: var(--accent);">./demo-real-repo</div>
+        <div class="stat-value" style="font-size: 18px; color: var(--accent);">./target-repo</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Security Vulnerabilities</div>
-        <div class="stat-value" style="color: var(--success);">
-          0
+        <div class="stat-value" style="color: var(--critical);">
+          3
         </div>
       </div>
       <div class="stat-card">
@@ -185,15 +185,59 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">Audit Timestamp</div>
-        <div class="stat-value" style="font-size: 14px; color: var(--text-muted);">27/09/2026, 07:15:04</div>
+        <div class="stat-value" style="font-size: 14px; color: var(--text-muted);">27/09/2026, 07:47:58</div>
       </div>
     </div>
 
-    <div class="section-title">🔒 Static Security Analysis (0 Issues Detected)</div>
+    <div class="section-title">🔒 Static Security Analysis (3 Issues Detected)</div>
     <div class="card">
       
-        <div style="padding: 24px; text-align: center; color: var(--success);">
-          ✔ No security vulnerabilities detected in repository!
+        <div class="finding-item">
+          <div class="finding-header">
+            <strong>#1 — Hardcoded Secret / API Token</strong>
+            <span class="badge badge-high">HIGH</span>
+          </div>
+          <div style="color: var(--text-muted); font-size: 13px;">Location: <code>target-repo/config/auth.js:3</code></div>
+          <div class="code-box">jwtSecret: &quot;sk_live_51M0BobHackathonSecretKey99887766&quot;,</div>
+          <div class="remediation-box">
+            <strong>Actionable Remediation:</strong> Rotate token immediately. Extract credential to environment variables (e.g. process.env.JWT_SECRET) or a secret manager.
+            
+              <div style="margin-top: 6px; font-weight: 600; color: #94a3b8;">Suggested Patch:</div>
+              <div class="patch-box">jwtSecret: process.env.JWT_SECRET || &quot;&quot;,</div>
+            
+          </div>
+        </div>
+      
+        <div class="finding-item">
+          <div class="finding-header">
+            <strong>#2 — SQL Injection via String Concatenation</strong>
+            <span class="badge badge-high">HIGH</span>
+          </div>
+          <div style="color: var(--text-muted); font-size: 13px;">Location: <code>target-repo/services/database.js:9</code></div>
+          <div class="code-box">const query = &quot;SELECT id, username, email, role FROM users WHERE username = '&quot; + username + &quot;' AND active = 1&quot;;</div>
+          <div class="remediation-box">
+            <strong>Actionable Remediation:</strong> Use parameterized queries or prepared statements (e.g., db.query("... WHERE username = ?", [username])) to safely escape inputs.
+            
+              <div style="margin-top: 6px; font-weight: 600; color: #94a3b8;">Suggested Patch:</div>
+              <div class="patch-box">const query = &quot;SELECT id, username, email, role FROM users WHERE username = ? AND active = 1&quot;; // Pass param via db.execute(query, [username])</div>
+            
+          </div>
+        </div>
+      
+        <div class="finding-item">
+          <div class="finding-header">
+            <strong>#3 — Unsafe Dynamic Code Execution (eval/exec)</strong>
+            <span class="badge badge-critical">CRITICAL</span>
+          </div>
+          <div style="color: var(--text-muted); font-size: 13px;">Location: <code>target-repo/services/dynamicRuleEvaluator.js:4</code></div>
+          <div class="code-box">const result = eval(formulaStr);</div>
+          <div class="remediation-box">
+            <strong>Actionable Remediation:</strong> Eliminate eval() / exec(). Parse and evaluate mathematical expressions using a sandboxed AST parser or safe arithmetic tokenizer.
+            
+              <div style="margin-top: 6px; font-weight: 600; color: #94a3b8;">Suggested Patch:</div>
+              <div class="patch-box">const result = safeEvaluateFormula(formulaStr) /* Use AST parser */;</div>
+            
+          </div>
         </div>
       
     </div>
@@ -209,14 +253,14 @@
         </div>
         <div class="code-box" style="white-space: pre-wrap;">PASS __tests__/pricingEngine.test.js
   PricingEngine - calculateOrderTotal
-    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (7 ms)
+    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (24 ms)
     √ correctly stacks Tier 3 (20%) volume discount with loyalty member discount (5%) (2 ms)
-    √ enforces validation boundaries and rejects invalid quantity and price inputs (21 ms)
+    √ enforces validation boundaries and rejects invalid quantity and price inputs (64 ms)
 
 Test Suites: 1 passed, 1 total
 Tests:       3 passed, 3 total
 Snapshots:   0 total
-Time:        0.942 s, estimated 1 s
+Time:        1.381 s
 Ran all test suites matching /__tests__/i.</div>
       </div>
     </div>
