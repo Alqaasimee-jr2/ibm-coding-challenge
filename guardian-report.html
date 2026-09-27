@@ -3,368 +3,271 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PR Pre-Flight Guardian — Dashboard</title>
+  <title>PR Pre-Flight Guardian — Executive Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0d1117; --surface: #161b22; --border: #30363d;
-      --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
-      --green: #3fb950; --red: #f85149; --yellow: #d29922;
-      --critical: #f85149; --high: #d29922;
+      --bg: #090d16;
+      --surface: #111726;
+      --surface-border: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --critical: #ef4444;
+      --high: #f59e0b;
+      --success: #10b981;
+      --card-bg: rgba(17, 23, 38, 0.7);
     }
-    body { background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; line-height: 1.6; padding: 24px; }
-    h1 { font-size: 1.6rem; margin-bottom: 4px; }
-    h2 { font-size: 1.15rem; margin: 28px 0 12px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-    h3 { font-size: 1rem; margin: 16px 0 8px; color: var(--muted); }
-    .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
-    .container { max-width: 1200px; margin: 0 auto; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--surface-border);
+      margin-bottom: 32px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .shield-icon {
+      font-size: 32px;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      padding: 10px;
+      border-radius: 12px;
+      display: inline-flex;
+    }
+    .title h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+    .title p { color: var(--text-muted); font-size: 14px; }
+    .verdict-tag {
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .verdict-clean { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .verdict-blocked { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
 
-    /* Verdict banner */
-    .verdict {
-      border: 2px solid #ef4444;
+    .grid-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 14px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+    }
+    .stat-label { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .stat-value { font-size: 26px; font-weight: 800; }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 14px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .finding-item {
+      padding: 20px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+    .finding-item:last-child { border-bottom: none; }
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    .badge-critical { background: #ef4444; color: #fff; }
+    .badge-high { background: #f59e0b; color: #000; }
+    .code-box {
+      background: #020617;
+      border: 1px solid #1e293b;
       border-radius: 8px;
-      padding: 16px 24px;
-      margin-bottom: 28px;
-      background: rgba(239,68,68,0.08);
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #e2e8f0;
+      margin: 10px 0;
+      overflow-x: auto;
     }
-    .verdict h2 { color: #ef4444; border: none; margin: 0; font-size: 1.3rem; }
-
-    /* Score cards */
-    .scorecards { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; flex: 1; min-width: 180px; }
-    .card .label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-    .card .value { font-size: 2.2rem; font-weight: 700; line-height: 1.1; }
-    .card .sub   { color: var(--muted); font-size: 0.78rem; margin-top: 4px; }
-    .c-green  { color: var(--green); }
-    .c-red    { color: var(--red); }
-    .c-yellow { color: var(--yellow); }
-    .c-accent { color: var(--accent); }
-
-    /* Gauge section */
-    .gauge-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin-bottom: 28px; font-family: monospace; }
-    .gauge-row { margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-    .gauge-label { width: 180px; color: var(--muted); font-size: 0.85rem; }
-
-    /* Severity badges */
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-    .badge-critical { background: rgba(248,81,73,0.18); color: var(--critical); border: 1px solid var(--critical); }
-    .badge-high     { background: rgba(210,153,34,0.18); color: var(--yellow); border: 1px solid var(--yellow); }
-
-    /* Tables */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.85rem; }
-    th { background: var(--surface); color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 600; }
-    td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    tr:hover td { background: rgba(255,255,255,0.025); }
-    code { background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.82em; }
-    pre.patch { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 12px; overflow-x: auto; font-size: 0.78rem; margin-top: 8px; color: #79c0ff; white-space: pre-wrap; }
-    details summary { cursor: pointer; color: var(--accent); font-size: 0.82rem; }
-
-    /* Test rows */
-    .test-fail td { color: var(--red); }
-    .test-skip td { color: var(--muted); }
-
-    /* Checklist */
-    .checklist { list-style: none; padding: 0; }
-    .checklist li { padding: 4px 0; display: flex; align-items: center; gap: 8px; }
-    .chk-pass::before { content: "✅"; }
-    .chk-fail::before { content: "☐"; color: var(--red); }
-    .chk-manual::before { content: "☐"; color: var(--muted); }
-
-    footer { margin-top: 40px; padding-top: 12px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.78rem; text-align: center; }
-    @media (max-width: 640px) { .scorecards { flex-direction: column; } }
+    .remediation-box {
+      background: rgba(14, 165, 233, 0.08);
+      border-left: 3px solid #0ea5e9;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    .remediation-box strong { color: #38bdf8; }
+    .patch-box {
+      background: #0f172a;
+      border: 1px dashed #334155;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #a7f3d0;
+      margin-top: 8px;
+    }
+    .footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--surface-border);
+    }
   </style>
 </head>
 <body>
-<div class="container">
+  <div class="container">
+    <div class="header">
+      <div class="brand">
+        <div class="shield-icon">🛡️</div>
+        <div class="title">
+          <h1>PR Pre-Flight Guardian</h1>
+          <p>Autonomous Pre-Flight Security & Quality Verification</p>
+        </div>
+      </div>
+      <div>
+        <span class="verdict-tag verdict-blocked">
+          🚨 Verdict: Action Required
+        </span>
+      </div>
+    </div>
 
-  <h1>🛡️ PR Pre-Flight Guardian</h1>
-  <p class="meta">Repository: <code>C:\Users\DELL\Desktop\ibm-coding-challenge\target-repo</code> &nbsp;|&nbsp; Generated: 2026-09-27T03:54:42.268Z</p>
+    <div class="grid-stats">
+      <div class="stat-card">
+        <div class="stat-label">Target Repository</div>
+        <div class="stat-value" style="font-size: 18px; color: var(--accent);">./target-repo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Security Vulnerabilities</div>
+        <div class="stat-value" style="color: var(--critical);">
+          3
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Unit Test Pass Rate</div>
+        <div class="stat-value" style="color: var(--success);">
+          3/3 (100%)
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Audit Timestamp</div>
+        <div class="stat-value" style="font-size: 14px; color: var(--text-muted);">27/09/2026, 05:26:21</div>
+      </div>
+    </div>
 
-  <!-- Verdict Banner -->
-  <div class="verdict">
-    <h2>🚨 ACTION REQUIRED — Merge Blocked</h2>
-  </div>
-
-  <!-- Score Cards -->
-  <div class="scorecards">
+    <div class="section-title">🔒 Static Security Analysis (3 Issues Detected)</div>
     <div class="card">
-      <div class="label">Overall Score</div>
-      <div class="value c-yellow">50%</div>
-      <div class="sub">Security + Test average</div>
+      
+        <div class="finding-item">
+          <div class="finding-header">
+            <strong>#1 — Hardcoded Secret / API Token</strong>
+            <span class="badge badge-high">HIGH</span>
+          </div>
+          <div style="color: var(--text-muted); font-size: 13px;">Location: <code>target-repo/config/auth.js:3</code></div>
+          <div class="code-box">jwtSecret: &quot;sk_live_51M0BobHackathonSecretKey99887766&quot;,</div>
+          <div class="remediation-box">
+            <strong>Actionable Remediation:</strong> Rotate token immediately. Extract credential to environment variables (e.g. process.env.JWT_SECRET) or a secret manager.
+            
+              <div style="margin-top: 6px; font-weight: 600; color: #94a3b8;">Suggested Patch:</div>
+              <div class="patch-box">jwtSecret: process.env.JWT_SECRET || &quot;&quot;,</div>
+            
+          </div>
+        </div>
+      
+        <div class="finding-item">
+          <div class="finding-header">
+            <strong>#2 — SQL Injection via String Concatenation</strong>
+            <span class="badge badge-high">HIGH</span>
+          </div>
+          <div style="color: var(--text-muted); font-size: 13px;">Location: <code>target-repo/services/database.js:9</code></div>
+          <div class="code-box">const query = &quot;SELECT id, username, email, role FROM users WHERE username = '&quot; + username + &quot;' AND active = 1&quot;;</div>
+          <div class="remediation-box">
+            <strong>Actionable Remediation:</strong> Use parameterized queries or prepared statements (e.g., db.query("... WHERE username = ?", [username])) to safely escape inputs.
+            
+              <div style="margin-top: 6px; font-weight: 600; color: #94a3b8;">Suggested Patch:</div>
+              <div class="patch-box">const query = &quot;SELECT id, username, email, role FROM users WHERE username = ? AND active = 1&quot;; // Pass param via db.execute(query, [username])</div>
+            
+          </div>
+        </div>
+      
+        <div class="finding-item">
+          <div class="finding-header">
+            <strong>#3 — Unsafe Dynamic Code Execution (eval/exec)</strong>
+            <span class="badge badge-critical">CRITICAL</span>
+          </div>
+          <div style="color: var(--text-muted); font-size: 13px;">Location: <code>target-repo/services/dynamicRuleEvaluator.js:4</code></div>
+          <div class="code-box">const result = eval(formulaStr);</div>
+          <div class="remediation-box">
+            <strong>Actionable Remediation:</strong> Eliminate eval() / exec(). Parse and evaluate mathematical expressions using a sandboxed AST parser or safe arithmetic tokenizer.
+            
+              <div style="margin-top: 6px; font-weight: 600; color: #94a3b8;">Suggested Patch:</div>
+              <div class="patch-box">const result = safeEvaluateFormula(formulaStr) /* Use AST parser */;</div>
+            
+          </div>
+        </div>
+      
     </div>
+
+    <div class="section-title">🧪 Automated Test Suite Execution</div>
     <div class="card">
-      <div class="label">Security Health</div>
-      <div class="value c-red">0%</div>
-      <div class="sub">4 finding(s): 3 critical, 1 high</div>
+      <div style="padding: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+          <strong>Jest Test Runner</strong>
+          <span style="color: var(--success); font-weight: 700;">
+            PASS (100% Green)
+          </span>
+        </div>
+        <div class="code-box" style="white-space: pre-wrap;">PASS __tests__/pricingEngine.test.js
+  PricingEngine - calculateOrderTotal
+    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (8 ms)
+    √ correctly stacks Tier 3 (20%) volume discount with loyalty member discount (5%) (4 ms)
+    √ enforces validation boundaries and rejects invalid quantity and price inputs (31 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.98 s, estimated 2 s
+Ran all test suites matching /__tests__/i.</div>
+      </div>
     </div>
-    <div class="card">
-      <div class="label">Test Pass Rate</div>
-      <div class="value c-green">100%</div>
-      <div class="sub">20/20 tests · 0.00s</div>
-    </div>
-    <div class="card">
-      <div class="label">Critical Findings</div>
-      <div class="value c-red">3</div>
-      <div class="sub">Must fix before merge</div>
-    </div>
-    <div class="card">
-      <div class="label">Test Suites</div>
-      <div class="value c-accent">1</div>
-      <div class="sub">20 total test cases</div>
+
+    <div class="footer">
+      Generated autonomously by <strong>IBM Bob IDE</strong> • PR Pre-Flight Guardian Engine
     </div>
   </div>
-
-  <!-- Gauge -->
-  <div class="gauge-section">
-    <h3 style="color:var(--text);margin-top:0;margin-bottom:14px;">📊 Pre-Flight Readiness Scorecard</h3>
-    <div class="gauge-row">
-      <span class="gauge-label">Security Health</span>
-      <span><span style="color:#f85149"></span><span style="color:#374151">░░░░░░░░░░░░░░░░░░░░</span> <strong style="color:#f85149">0%</strong></span>
-    </div>
-    <div class="gauge-row">
-      <span class="gauge-label">Test Pass Rate</span>
-      <span><span style="color:#3fb950">████████████████████</span><span style="color:#374151"></span> <strong style="color:#3fb950">100%</strong></span>
-    </div>
-    <div class="gauge-row">
-      <span class="gauge-label">Overall Score</span>
-      <span><span style="color:#d29922">██████████</span><span style="color:#374151">░░░░░░░░░░</span> <strong style="color:#d29922">50%</strong></span>
-    </div>
-  </div>
-
-  <!-- Security Risk Matrix -->
-  <h2>🔐 Security Risk Matrix</h2>
-  <div class="table-wrap"><table>
-    <thead><tr><th>#</th><th>Severity</th><th>Rule ID</th><th>Location</th><th>Description</th><th>Remediation</th><th>Suggested Fix</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td><span class="badge badge-critical">CRITICAL</span></td>
-        <td><code>SECRET_HARDCODED_SK_LIVE</code></td>
-        <td><code>target-repo\config\auth.js:3</code></td>
-        <td>Hardcoded live secret/API key detected (sk_live_... pattern)</td>
-        <td>Move key to an environment variable or secrets manager (e.g., `.env` + `dotenv`). Rotate the exposed key immediately.</td>
-        <td>—</td>
-      </tr>
-
-      <tr>
-        <td>2</td>
-        <td><span class="badge badge-critical">CRITICAL</span></td>
-        <td><code>SECRET_JWT_ASSIGNMENT</code></td>
-        <td><code>target-repo\config\auth.js:3</code></td>
-        <td>High-entropy JWT / token secret assigned directly in source code</td>
-        <td>Load JWT secret from `process.env.JWT_SECRET`. Never commit plaintext secrets to source control.</td>
-        <td>—</td>
-      </tr>
-
-      <tr>
-        <td>3</td>
-        <td><span class="badge badge-high">HIGH</span></td>
-        <td><code>SQL_INJECTION_CONCAT</code></td>
-        <td><code>target-repo\services\database.js:9</code></td>
-        <td>SQL query built via string concatenation — potential SQL injection</td>
-        <td>Replace string-concatenated queries with parameterised statements (e.g., `db.query(&quot;… WHERE id = ?&quot;, [id])`).</td>
-        <td>—</td>
-      </tr>
-
-      <tr>
-        <td>4</td>
-        <td><span class="badge badge-critical">CRITICAL</span></td>
-        <td><code>UNSAFE_EVAL</code></td>
-        <td><code>target-repo\services\dynamicRuleEvaluator.js:4</code></td>
-        <td>Unsafe eval() call — arbitrary code execution risk</td>
-        <td>Remove `eval()`. Use a safe expression parser (e.g., `mathjs`, `expr-eval`) or restructure the logic.</td>
-        <td>—</td>
-      </tr></tbody>
-  </table></div>
-
-  <!-- Test Execution Metrics -->
-  <h2>🧪 Test Execution Metrics</h2>
-  <div class="table-wrap">
-    <table style="max-width:500px">
-      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>Test Suites</td><td>1</td></tr>
-        <tr><td>Total Tests</td><td>20</td></tr>
-        <tr><td>✅ Passed</td><td style="color:var(--green)">20</td></tr>
-        <tr><td>❌ Failed</td><td style="color:var(--muted)">0</td></tr>
-        <tr><td>Pass Rate</td><td>100%</td></tr>
-        <tr><td>Duration</td><td>0.00s</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3>Individual Test Results</h3>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Status</th><th>Test Name</th><th>Suite</th><th>Duration</th></tr></thead>
-      <tbody>
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 2 volume discount — 10 % for qty &gt;= 10 applies 10 % discount and a custom 8 % tax rate correctly</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>8ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 2 volume discount — 10 % for qty &gt;= 10 applies 10 % discount at exactly qty=10 boundary</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>3ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 2 volume discount — 10 % for qty &gt;= 10 does NOT apply Tier 2 discount for qty=9 (boundary below threshold)</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>6ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 2 volume discount — 10 % for qty &gt;= 10 includes a custom 12 % tax rate in the final total</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>3ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 3 volume discount — 20 % for qty &gt;= 50, stacked with loyalty (+5 %) stacks 20 % volume + 5 % loyalty = 25 % total discount with custom 5 % tax</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 3 volume discount — 20 % for qty &gt;= 50, stacked with loyalty (+5 %) applies only 20 % when qty &gt;= 50 and loyalty is false</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>1ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 3 volume discount — 20 % for qty &gt;= 50, stacked with loyalty (+5 %) applies 25 % combined discount at qty=100 (well above tier 3 threshold)</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>3ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Tier 3 volume discount — 20 % for qty &gt;= 50, stacked with loyalty (+5 %) loyalty bonus alone adds 5 % when qty &lt; 10 (no volume tier active)</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>1ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws on negative unit price</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>85ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws when unit price is NaN</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws when unit price is a string</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>3ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws on quantity of zero</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>6ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws on negative quantity</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>3ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws on non-integer quantity (float)</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws when quantity is a string</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>3ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws on negative tax rate</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws when tax rate is NaN</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments throws when tax rate is a string</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments accepts unitPrice = 0 (free item) without throwing</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>11ms</td>
-      </tr>
-
-      <tr class="test-pass">
-        <td>✅</td>
-        <td>calculateOrderTotal Input validation — throws on invalid arguments accepts taxRate = 0 (tax-exempt) without throwing</td>
-        <td>__tests__\pricingEngine.test.js</td>
-        <td>2ms</td>
-      </tr></tbody>
-    </table>
-  </div>
-
-  <!-- Reviewer Sign-off Checklist -->
-  <h2>📋 Automated Reviewer Sign-off Checklist</h2>
-  <h3>Security</h3>
-  <ul class="checklist">
-    <li class="chk-fail">No critical or high vulnerabilities present</li>
-    <li class="chk-fail">All CRITICAL findings resolved or risk-accepted</li>
-    <li class="chk-fail">All HIGH findings resolved or mitigated</li>
-    <li class="chk-manual">Secrets confirmed absent from diff (manual review)</li>
-    <li class="chk-manual">No new <code>eval()</code> or unchecked <code>exec()</code> calls introduced</li>
-  </ul>
-  <h3>Testing</h3>
-  <ul class="checklist">
-    <li class="chk-pass">All automated tests pass</li>
-    <li class="chk-manual">New code paths are covered by tests</li>
-    <li class="chk-manual">Edge cases and negative paths exercised</li>
-  </ul>
-  <h3>General</h3>
-  <ul class="checklist">
-    <li class="chk-manual">Code follows project style guide</li>
-    <li class="chk-manual">Documentation updated where applicable</li>
-    <li class="chk-manual">Dependent environment variables updated</li>
-  </ul>
-
-  <footer>PR Pre-Flight Guardian &mdash; IBM Coding Challenge &mdash; <a href="https://github.com" style="color:var(--accent)">View on GitHub</a></footer>
-</div>
 </body>
 </html>

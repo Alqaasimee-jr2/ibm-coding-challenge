@@ -1,10 +1,21 @@
 {
-  "name": "ibm-coding-challenge",
+  "name": "pr-preflight-guardian",
   "version": "1.0.0",
-  "description": "PR Pre-Flight Guardian - IBM Coding Challenge",
+  "description": "PR Pre-Flight Guardian - Automated security scan, test generation & PR documentation pipeline",
+  "main": "guardian.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest __tests__",
+    "scan": "node security-scan.js",
+    "guardian": "node guardian.js"
   },
+  "keywords": [
+    "security",
+    "testing",
+    "pr-bot",
+    "code-quality"
+  ],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "jest": "^29.7.0"
   }

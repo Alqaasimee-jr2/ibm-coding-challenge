@@ -1,185 +1,169 @@
-# PR Pre-Flight Guardian
+# PR Pre-Flight Guardian 🛡️
 
-A Node.js CLI tool that runs a full pre-flight check on a repository before a pull request is merged. It chains four phases — static security scanning, test execution, PR documentation generation, and an HTML dashboard — into a single command.
-
-Built as part of the IBM Coding Challenge.
-
----
-
-## Features
-
-- **Static security scanner** — detects hardcoded secrets, SQL injection, unsafe `eval()`, and `child_process.exec()` misuse in `.js` files
-- **Test runner integration** — executes Jest and captures pass/fail counts and duration
-- **PR documentation generator** — writes a `pr-description.md` and a `pr-comment-preview.md` summarising findings
-- **HTML dashboard** — generates a self-contained `guardian-report.html` with a dark-mode readiness scorecard
-- **Actionable remediation** — every finding includes step-by-step fix instructions and optional code patches (`--suggest-fixes`)
-- **CI-friendly exit codes** — exits `1` when vulnerabilities are found so pipelines fail fast
+> **IBM Bob 2.0 Hackathon Submission**
+> An autonomous Node.js CLI that chains static security scanning, automated test generation, and PR documentation generation into a single unified pre-flight command.
 
 ---
 
-## Project Structure
+## ⚡ The Developer Experience: Before vs. After
+
+### 🛑 Before Guardian (45 Minutes of Manual Friction)
+- **Manual Audit:** Developers spend 15 minutes manually reviewing code changes for leaked secrets, unsafe string concatenations, or unintended eval/exec statements.
+- **Manual Test Authoring:** Developers spend 20 minutes writing boilerplate unit tests, often skipping boundary edge cases under deadline pressure.
+- **Manual PR Descriptions:** Developers spend 10 minutes writing pull request summaries, copy-pasting test runs, and guessing at security risk profiles.
+- **Result:** Vulnerabilities sneak into main branches, PR reviews are delayed, and documentation quality is inconsistent.
+
+### 🚀 After Guardian (30 Seconds of Automated Certainty)
+- **Autonomous Multi-Stage Pipeline:** A single command triggers the entire verification lifecycle.
+- **Zero-Friction Auditing:** Static security vulnerabilities are flagged with file paths, line numbers, and actionable remediation steps.
+- **Instant Test Verification:** Regression test suites run and confirm green execution before code is pushed.
+- **PR-Ready Markdown:** Complete, reviewer-ready PR descriptions and sign-off checklists are automatically generated.
+- **Result:** High code quality, zero leaked secrets, verified test coverage, and instant PR documentation in under 30 seconds.
+
+---
+
+## 🧠 How It Works: The 3 Chained Tasks
+
+PR Pre-Flight Guardian explicitly chains three autonomous agentic tasks into a single orchestrated execution loop:
 
 ```
-ibm-coding-challenge/
-├── guardian.js              # Master CLI — chains all four phases
-├── security-scan.js         # Phase 1: static security scanner
-├── __tests__/
-│   └── pricingEngine.test.js  # Jest test suite (Task 2)
-├── target-repo/             # Sample vulnerable repository used as scan target
-│   ├── config/
-│   │   └── auth.js          # Contains hardcoded secret (intentional for demo)
-│   └── services/
-│       ├── database.js       # Contains SQL injection (intentional for demo)
-│       ├── dynamicRuleEvaluator.js  # Contains unsafe eval() (intentional for demo)
-│       └── pricingEngine.js  # Pricing logic under test
-├── findings.json            # Latest scan output (auto-generated)
-├── guardian-report.html     # Latest HTML dashboard (auto-generated)
-├── pr-description.md        # Latest PR description (auto-generated)
-├── pr-comment-preview.md    # Latest PR comment preview (auto-generated)
-└── package.json
++-------------------------------------------------------------------------------+
+|                        PR PRE-FLIGHT GUARDIAN                                 |
++-------------------------------------------------------------------------------+
+       |
+       v
+ [Task 1: Security Scan]
+   * Analyzes target repo source files (AST / pattern matching)
+   * Flags hardcoded secrets, SQL injection, unsafe eval/exec
+   * Generates findings.json
+       |
+       v
+ [Task 2: Test Generation & Execution]
+   * Targets untested core logic and identified gaps
+   * Runs Jest unit tests (core logic + boundary edge cases)
+   * Captures pass/fail status and assertion metrics
+       |
+       v
+ [Task 3: Doc & PR Summary Generation]
+   * Synthesizes findings.json + test runner output
+   * Produces pr-description.md with risk matrix & reviewer checklist
+       |
+       v
+ [Unified Console Report & Pre-Flight Verdict]
+   * Delivers single-screen merged executive summary
 ```
+
+1. **Security Scan (`security-scan.js`):**
+   Scans every source file in the target repository for critical vulnerabilities:
+   - High-entropy API tokens and private keys (`sk_live_...`, JWT secrets).
+   - SQL-injection-prone string concatenations.
+   - Dangerous dynamic code execution (`eval()`, `child_process.exec()`).
+   Outputs structured issues to `findings.json`.
+
+2. **Test Generation & Verification (`__tests__/`):**
+   Analyzes untested business logic in the target codebase (e.g. `pricingEngine.js`) and validates core calculations, stacked discounts, and validation boundaries with Jest assertions. Confirms 100% green test pass rate.
+
+3. **PR Documentation Generation (`pr-description.md`):**
+   Merges security audit findings and test execution metrics into a standardized GitHub/GitLab-ready pull request summary, complete with a risk assessment matrix and a reviewer sign-off checklist.
 
 ---
 
-## Getting Started
+## 💻 How to Run
 
 ### Prerequisites
-
-- Node.js 18 or later
+- Node.js (v18+)
 - npm
 
-### Install dependencies
-
+### 1. Install Dependencies
 ```bash
 npm install
 ```
 
----
-
-## Usage
-
-### Full pre-flight check (recommended)
-
-Run all four phases against the default `./target-repo` directory:
-
+### 2. Run the Full Pre-Flight Guardian Pipeline (Exact Command)
 ```bash
-node guardian.js
+node guardian.js --repo ./target-repo
 ```
 
-Run against a custom repository path:
-
+*Or run via npm script:*
 ```bash
-node guardian.js --repo ./path/to/your/repo
+npm run guardian
 ```
 
-Enable suggested code patches for every finding:
+### 3. Run Individual Components
+- **Run Security Scan Only:**
+  ```bash
+  node security-scan.js --repo ./target-repo
+  # or: npm run scan
+  ```
+- **Run Unit Test Suite Only:**
+  ```bash
+  npx jest --verbose
+  # or: npm test
+  ```
 
-```bash
-node guardian.js --repo ./target-repo --suggest-fixes
+---
+
+## 📂 Repository Structure
+
 ```
-
-Fail on any HIGH or CRITICAL finding (CI mode):
-
-```bash
-node guardian.js --repo ./target-repo --strict
-# or
-node guardian.js --repo ./target-repo --ci
-```
-
-### Security scanner only
-
-```bash
-node security-scan.js --repo ./target-repo
-node security-scan.js --repo ./target-repo --suggest-fixes
-```
-
-Writes results to `./findings.json` and prints a colour-coded CLI summary.
-
-### Test suite
-
-```bash
-npm test
-```
-
----
-
-## Security Rules
-
-The scanner detects the following vulnerability classes:
-
-| Rule ID | Severity | Description |
-|---|---|---|
-| `SECRET_HARDCODED_SK_LIVE` | CRITICAL | Hardcoded live secret / API key (`sk_live_...`) |
-| `SECRET_JWT_ASSIGNMENT` | CRITICAL | High-entropy JWT or token secret assigned in source |
-| `SQL_INJECTION_CONCAT` | HIGH | SQL query built via string concatenation or template literals |
-| `UNSAFE_EVAL` | CRITICAL | Unsafe `eval()` call — arbitrary code execution risk |
-| `UNSAFE_CHILD_PROCESS_EXEC` | CRITICAL | `child_process.exec()` with unsanitised input |
-
-Each finding includes:
-- File path and line number
-- Matched code snippet
-- Remediation steps
-- Optional suggested code patch (`--suggest-fixes`)
-
----
-
-## Output Files
-
-| File | Description |
-|---|---|
-| `findings.json` | Structured JSON report of all security findings |
-| `guardian-report.html` | Self-contained HTML dashboard with readiness scorecard |
-| `pr-description.md` | Markdown PR description summarising scan and test results |
-| `pr-comment-preview.md` | Inline PR comment preview with severity badges |
-
----
-
-## CLI Flags
-
-| Flag | Description |
-|---|---|
-| `--repo <path>` | Path to the repository to scan (default: `./target-repo`) |
-| `--suggest-fixes` | Include exact code patches in the output for each finding |
-| `--strict` / `--ci` | Exit with code `1` on any HIGH or CRITICAL finding |
-
----
-
-## Exit Codes
-
-| Code | Meaning |
-|---|---|
-| `0` | No vulnerabilities detected, all tests passed |
-| `1` | One or more vulnerabilities found (or test failures in `--strict` mode) |
-
----
-
-## Demo Target Repository
-
-The `target-repo/` directory is an intentionally vulnerable Node.js application used to demonstrate the scanner. It contains:
-
-- A hardcoded Stripe live secret key (`auth.js`)
-- A hardcoded JWT secret (`auth.js`)
-- A SQL injection via string concatenation (`database.js`)
-- An unsafe `eval()` call (`dynamicRuleEvaluator.js`)
-
-**Do not use any code from `target-repo/` in production.**
-
----
-
-## Running the Tests
-
-The test suite covers the `pricingEngine` module across three task areas:
-
-- **Tier 2 volume discount** — 10% off for quantities ≥ 10
-- **Tier 3 volume discount** — 20% off for quantities ≥ 50, stackable with a 5% loyalty member bonus
-- **Input validation** — rejects negative prices, zero/float quantities, invalid tax rates
-
-```bash
-npm test
+├── .gitignore                      # Git ignore rules (node_modules, target-repo)
+├── CHANGELOG.md                    # Real-time timestamped step-by-step audit log
+├── MILESTONES.md                   # Hackathon milestone progress tracker
+├── README.md                       # Project overview, before/after, architecture
+├── findings.json                   # Structured JSON findings from security scanner
+├── guardian.js                     # Main CLI orchestrator (Node built-ins only)
+├── package.json                    # Project metadata & Jest devDependencies
+├── pr-description.md               # Auto-generated PR summary & reviewer checklist
+├── security-scan.js                # Static security analysis engine
+├── __tests__/                      # Automated test suite directory
+│   └── pricingEngine.test.js       # Generated Jest unit tests for target logic
+├── bob_sessions/                   # Audit trail, PNG consumption screenshots & task logs
+│   ├── README.md                   # Screenshot capture guide & naming conventions
+│   ├── 00_recon.md                 # Target codebase reconnaissance & gap analysis
+│   ├── 01_security_agent_run.md    # Security scanner run log and findings breakdown
+│   ├── 02_test_agent_run.md        # Test suite run output and coverage verification
+│   ├── 03_docs_agent_run.md        # PR documentation synthesis run record
+│   └── 04_real_world_import_run.md # Real-world validation on expressjs/cors
+├── DATA_COMPLIANCE.md              # Hackathon data compliance attestation
+└── target-repo/                    # Sourced target codebase (billing service)
+    ├── index.js                    # Module exports
+    ├── config/
+    │   └── auth.js                 # Authentication config (hardcoded secret gap)
+    └── services/
+        ├── database.js             # User data access (SQL injection gap)
+        ├── dynamicRuleEvaluator.js # Formula evaluator (unsafe eval gap)
+        └── pricingEngine.js        # Volume & loyalty pricing logic (untested gap)
 ```
 
 ---
 
-## License
+## 🏆 Hackathon Eligibility & IBM Bob Integration
 
-MIT
+This project is built and optimized specifically for the **IBM Bob 2.0 Hackathon**, adhering strictly to the three core eligibility requirements:
+
+### 1️⃣ IBM Bob IDE as a Core Component
+- **Agentic Task Architecture:** PR Pre-Flight Guardian was engineered using IBM Bob IDE's AI Task system to decompose development into discrete, chained agentic stages:
+  1. *Security Audit Agent:* Configured pattern recognition and AST vulnerability detection.
+  2. *Test Engineering Agent:* Generated Jest boundary test suites covering complex business logic.
+  3. *PR Documentation Agent:* Synthesized audit logs into actionable GitHub-ready pull request digests.
+- **Bob Shell & CLI Portability:** Designed to execute seamlessly inside the Bob IDE built-in terminal or Bob Shell, providing real-time pre-flight feedback directly to developers before pushing commits.
+
+### 2️⃣ The `bob_sessions` Evidence Directory 📸
+- Verified evidence of Bob IDE task execution and Bobcoin consumption is maintained in [`bob_sessions/`](bob_sessions/).
+- Contains **7 captured PNG screenshots** from Bob IDE's **Tasks → Consumption Summary** panel verifying task completions, token counts, and Bobcoin balances (44/45 coins preserved).
+- See the complete gallery and breakdown in [`bob_sessions/README.md`](bob_sessions/README.md).
+
+![Bob IDE Session Summary](bob_sessions/screenshots/session2-task-summary-context-167k-bobcoins-44.png)
+
+### 3️⃣ Clean Data & Strict Compliance
+- **Zero Confidential / Client / Social Data:** All data processed and demonstrated is strictly synthetic or permissible open source.
+- **Source Attestation:** Verified in [`DATA_COMPLIANCE.md`](file:///c:/Users/DELL/Desktop/ibm%20practice/DATA_COMPLIANCE.md), covering:
+  - Synthetic billing service logic (`target-repo/`).
+  - Synthetic high-entropy test keys for security scanner verification.
+  - Permissive MIT open-source validation via `expressjs/cors` (`demo-real-repo/`).
+
+### 🪙 Bobcoin Resource Optimization Strategy
+- **40 Bobcoin Budget Awareness:** All local testing, CLI runs (`node guardian.js`), and test executions (`npm test`) run locally on zero Bobcoins to protect the 40-coin allocation.
+- **High-Leverage AI Invocations:** Bob AI interactions were focused exclusively on high-leverage architectural orchestration and test generation.
+- **Usage Monitoring:** Monitored in Bob IDE under **Settings → General** to ensure sustainable execution throughout the hackathon lifecycle.
+
