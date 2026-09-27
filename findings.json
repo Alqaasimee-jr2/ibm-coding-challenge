@@ -1,0 +1,48 @@
+{
+  "scannedRepo": "C:\\Users\\DELL\\Desktop\\ibm-coding-challenge\\target-repo",
+  "scannedFiles": 5,
+  "totalFindings": 4,
+  "summary": {
+    "CRITICAL": 3,
+    "HIGH": 1
+  },
+  "suggestFixesEnabled": false,
+  "findings": [
+    {
+      "file": "C:\\Users\\DELL\\Desktop\\ibm-coding-challenge\\target-repo\\config\\auth.js",
+      "line": 3,
+      "severity": "CRITICAL",
+      "ruleId": "SECRET_HARDCODED_SK_LIVE",
+      "description": "Hardcoded live secret/API key detected (sk_live_... pattern)",
+      "snippet": "\"sk_live_51M0BobHackathonSecretKey99887766\"",
+      "remediation": "1. Remove the hardcoded secret from source code immediately.\n2. Store it as an environment variable (e.g. STRIPE_SECRET_KEY).\n3. Rotate the exposed key in your service dashboard.\n4. Add the variable name to .env.example but never commit real values.\n5. Consider using a secrets manager (Vault, AWS Secrets Manager) for production."
+    },
+    {
+      "file": "C:\\Users\\DELL\\Desktop\\ibm-coding-challenge\\target-repo\\config\\auth.js",
+      "line": 3,
+      "severity": "CRITICAL",
+      "ruleId": "SECRET_JWT_ASSIGNMENT",
+      "description": "High-entropy JWT / token secret assigned directly in source code",
+      "snippet": "jwtSecret: \"sk_live_51M0BobHackathonSecretKey99887766\"",
+      "remediation": "1. Remove the hardcoded secret value from source code.\n2. Replace it with process.env.JWT_SECRET (or equivalent).\n3. Generate a cryptographically strong secret: `openssl rand -hex 64`.\n4. Store the generated value in your environment / secrets manager.\n5. Rotate any tokens signed with the exposed secret."
+    },
+    {
+      "file": "C:\\Users\\DELL\\Desktop\\ibm-coding-challenge\\target-repo\\services\\database.js",
+      "line": 9,
+      "severity": "HIGH",
+      "ruleId": "SQL_INJECTION_CONCAT",
+      "description": "SQL query built via string concatenation — potential SQL injection",
+      "snippet": "\"SELECT id, username, email, role FROM users WHERE username = '\" + u",
+      "remediation": "1. Never interpolate user-supplied values directly into SQL strings.\n2. Use parameterised queries / prepared statements with placeholders ($1, ?, :name).\n3. Alternatively, use an ORM (Sequelize, Prisma, Knex) that handles escaping.\n4. Apply input allowlisting for column/table names that must be dynamic.\n5. Enable a WAF or database query firewall for defence-in-depth."
+    },
+    {
+      "file": "C:\\Users\\DELL\\Desktop\\ibm-coding-challenge\\target-repo\\services\\dynamicRuleEvaluator.js",
+      "line": 4,
+      "severity": "CRITICAL",
+      "ruleId": "UNSAFE_EVAL",
+      "description": "Unsafe eval() call — arbitrary code execution risk",
+      "snippet": "const result = eval(formulaStr);",
+      "remediation": "1. Remove eval() entirely — it executes arbitrary code in the current scope.\n2. For mathematical expressions, use a safe parser library (e.g. math.js, expr-eval).\n3. For JSON parsing, use JSON.parse() instead of eval().\n4. For rule / formula evaluation, define a whitelist-based interpreter.\n5. If dynamic execution is unavoidable, sandbox it in a Worker thread or vm.runInNewContext() with strict resource limits and no access to process/require."
+    }
+  ]
+}

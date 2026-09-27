@@ -1,0 +1,11 @@
+{
+  "name": "ibm-coding-challenge",
+  "version": "1.0.0",
+  "description": "PR Pre-Flight Guardian - IBM Coding Challenge",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
