@@ -2,7 +2,7 @@
 
 ![Status](https://img.shields.io/badge/PR--Pre--Flight-ACTION_REQUIRED-red)
 > **Target Repository:** `./target-repo`  
-> **Audited At:** `2026-09-27T07:08:53.765Z`  
+> **Audited At:** `2026-09-27T07:25:11.549Z`  
 > **Orchestrator:** IBM Bob IDE Agentic Pre-Flight Guardian  
 
 ---
@@ -12,7 +12,7 @@
 | Category | Status | Metrics | Verdict |
 | :--- | :---: | :--- | :---: |
 | **Static Security Scan** | ⚠️ VULNERABILITIES FOUND | 3 findings (1 Critical, 2 High) | BLOCKED |
-| **Automated Unit Tests** | ✅ PASSED | 3/3 tests green (2547ms) | CLEAR |
+| **Automated Unit Tests** | ✅ PASSED | 3/3 tests green (2948ms) | CLEAR |
 | **Data Compliance** | ✅ VERIFIED | 100% Synthetic & Permissive Open Source | CLEAR |
 
 ---
@@ -40,19 +40,19 @@ const result = safeEvaluateFormula(formulaStr) /* Use AST parser */;
 - **Summary Metrics:**
   - Total Suites: `1 passed, 1 total`
   - Total Tests: `3 passed, 0 failed, 3 total`
-  - Execution Time: `2547ms`
+  - Execution Time: `2948ms`
 
 ```text
 PASS __tests__/pricingEngine.test.js
   PricingEngine - calculateOrderTotal
-    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (10 ms)
-    √ correctly stacks Tier 3 (20%) volume discount with loyalty member discount (5%) (4 ms)
-    √ enforces validation boundaries and rejects invalid quantity and price inputs (25 ms)
+    √ calculates correct order total with Tier 2 (10%) volume discount and custom tax rate (8 ms)
+    √ correctly stacks Tier 3 (20%) volume discount with loyalty member discount (5%) (3 ms)
+    √ enforces validation boundaries and rejects invalid quantity and price inputs (32 ms)
 
 Test Suites: 1 passed, 1 total
 Tests:       3 passed, 3 total
 Snapshots:   0 total
-Time:        0.94 s, estimated 2 s
+Time:        0.866 s, estimated 2 s
 Ran all test suites matching /__tests__/i.
 ```
 

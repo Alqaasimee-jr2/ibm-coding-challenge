@@ -636,6 +636,26 @@ function main() {
   // Print rich report
   renderConsoleReport(repoPath, scanResult, testResult, prDocInfo, htmlPath, suggestFixes);
 
+  // If running in Replit or requested via --serve, launch lightweight HTTP preview server for HTML dashboard
+  if (process.env.REPL_ID || process.env.PORT || process.argv.includes('--serve')) {
+    const http = require('http');
+    const port = process.env.PORT || 3000;
+    const server = http.createServer((req, res) => {
+      if (htmlPath && fs.existsSync(htmlPath)) {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(fs.readFileSync(htmlPath));
+      } else {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('PR Pre-Flight Guardian audit report generated. Please check console output.');
+      }
+    });
+    server.listen(port, () => {
+      console.log(`\n${c.green}🌐 Live Webview Preview running on http://0.0.0.0:${port}${c.reset}`);
+      console.log(`${c.dim}   (Serving interactive guardian-report.html dashboard)${c.reset}\n`);
+    });
+    return;
+  }
+
   // Strict CI mode exit code
   if (strict) {
     const hasBlockers = (scanResult.findings || []).some(f => f.severity === 'CRITICAL' || f.severity === 'HIGH');
