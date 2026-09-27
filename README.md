@@ -157,7 +157,7 @@ This project is built and optimized specifically for the **IBM Bob 2.0 Hackathon
 
 ### 2️⃣ The `bob_sessions` Evidence Directory 📸
 - Verified evidence of Bob IDE task execution and Bobcoin consumption is maintained in [`bob_sessions/`](bob_sessions/).
-- Contains **18 curated PNG screenshots** from Bob IDE's **Tasks → Consumption Summary** panel verifying task completions, token counts, diff edits, and Bobcoin balances.
+- Contains **22 curated PNG screenshots** from Bob IDE's **Tasks → Consumption Summary** panel verifying task completions, token counts, live terminal runs, diff edits, and Bobcoin balances.
 - See the complete gallery and breakdown in [`bob_sessions/README.md`](bob_sessions/README.md).
 
 ![Bob IDE Session Summary](bob_sessions/screenshots/01_repo_init_and_task_consumption_summary.png)

@@ -7,7 +7,7 @@ This directory contains verified, visual, and audit-level evidence of **IBM Bob 
 
 ---
 
-## 📊 Curated Bob IDE Evidence Gallery (18 Verified Assets)
+## 📊 Curated Bob IDE Evidence Gallery (22 Verified Assets)
 
 | # | Screenshot Filename | Task / Milestone | Key Metrics Captured | Description |
 | :-: | :--- | :--- | :--- | :--- |
@@ -29,6 +29,10 @@ This directory contains verified, visual, and audit-level evidence of **IBM Bob 
 | **16** | [`16_bob_agent_diff_code_editing.png`](screenshots/16_bob_agent_diff_code_editing.png) | **Bob Agent Mode: Code Diff Editing** | Split diff view<br>Bobcoins: 6.33 | Bob Agent Mode reviewing and applying live code modifications in `guardian.js`. |
 | **17** | [`17_html_dashboard_and_ansi_report_spec.png`](screenshots/17_html_dashboard_and_ansi_report_spec.png) | **HTML Dashboard & ANSI Report Spec** | Dark-mode HTML spec<br>Bobcoins: 4.73 | Implementation summary of ANSI report and interactive HTML scorecard. |
 | **18** | [`18_final_tasks_execution_history.png`](screenshots/18_final_tasks_execution_history.png) | **Tasks History & Milestone Timeline** | Full task history<br>Task completion status | Chronological history of all completed development tasks in Bob IDE. |
+| **19** | [`19_guardian_cli_target_repo_vulnerabilities.png`](screenshots/19_guardian_cli_target_repo_vulnerabilities.png) | **Guardian CLI on Target Repo (Phase 1)** | 3 Findings Detected<br>Remediation fixes | Terminal in Bob IDE running `guardian.js --repo ./target-repo` showing suggested fix patches. |
+| **20** | [`20_guardian_cli_target_repo_blocked_verdict.png`](screenshots/20_guardian_cli_target_repo_blocked_verdict.png) | **Guardian CLI Target Verdict (Phase 2–4)** | Security Health: 30%<br>Verdict: BLOCKED | Terminal in Bob IDE showing blocked verdict scorecard and artifact generation paths. |
+| **21** | [`21_guardian_cli_cors_zero_vulnerabilities.png`](screenshots/21_guardian_cli_cors_zero_vulnerabilities.png) | **Guardian CLI on CORS Repo (Phase 1–2)** | 0 Vulnerabilities<br>Tests: 100% Green | Terminal in Bob IDE running `guardian.js --repo ./demo-real-repo` showing clean scan. |
+| **22** | [`22_guardian_cli_cors_approved_verdict.png`](screenshots/22_guardian_cli_cors_approved_verdict.png) | **Guardian CLI CORS Verdict (Phase 3–4)** | Security Health: 100%<br>Verdict: APPROVED | Terminal in Bob IDE showing green 100% readiness scorecard and approved merge verdict. |
 
 ---
 
@@ -43,17 +47,11 @@ This directory contains verified, visual, and audit-level evidence of **IBM Bob 
 ### 3. Bob Agent Mode Live Code Diff Editing
 ![Bob Agent Diff Editing](screenshots/16_bob_agent_diff_code_editing.png)
 
-### 4. Master Tasks Dashboard with Bobcoin Expenditures
-![Bob Tasks Dashboard](screenshots/08_bob_tasks_coin_consumption_dashboard.png)
+### 4. Guardian CLI on Target Repo: Vulnerability Detection & Blocked Verdict
+![Guardian Target Repo Run](screenshots/19_guardian_cli_target_repo_vulnerabilities.png)
 
-### 5. Static Security Scanner Detection in Bob Agent Mode
-![Security Scanner Findings](screenshots/03_task1_security_scanner_findings.png)
-
-### 6. Real-World Validation: Target Repo vs expressjs/cors
-![Real-World Comparison](screenshots/05_real_world_validation_cors_comparison.png)
-
-### 7. Interactive HTML Dashboard Generated & Inspected in Bob IDE
-![HTML Dashboard in Bob IDE](screenshots/10_guardian_html_dashboard_in_bob_ide.png)
+### 5. Guardian CLI on CORS Repo: Clean 100% Scorecard & Approved Merge
+![Guardian CORS Repo Run](screenshots/22_guardian_cli_cors_approved_verdict.png)
 
 ---
 
