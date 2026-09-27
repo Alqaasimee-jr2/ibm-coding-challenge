@@ -7,7 +7,7 @@ This directory contains verified, visual, and audit-level evidence of **IBM Bob 
 
 ---
 
-## 📊 Curated Bob IDE Evidence Gallery
+## 📊 Curated Bob IDE Evidence Gallery (18 Verified Assets)
 
 | # | Screenshot Filename | Task / Milestone | Key Metrics Captured | Description |
 | :-: | :--- | :--- | :--- | :--- |
@@ -25,24 +25,34 @@ This directory contains verified, visual, and audit-level evidence of **IBM Bob 
 | **12** | [`12_agent_task_orchestration_checklist.png`](screenshots/12_agent_task_orchestration_checklist.png) | **Live Agent Todo Progression** | Steps 1–5 completed<br>Bobcoins: 45.26 | Bob Agent Todo checklist actively tracking and advancing milestone steps. |
 | **13** | [`13_final_verification_suite_5_of_5_pass.png`](screenshots/13_final_verification_suite_5_of_5_pass.png) | **Final Verification Suite** | 5/5 verifications passed<br>All checks green | Bob terminal verification confirming 100% green status across all deliverables. |
 | **14** | [`14_model_token_consumption_breakdown.png`](screenshots/14_model_token_consumption_breakdown.png) | **Token & Model Consumption** | Context: 62% (270k)<br>Detailed telemetry | Telemetry breakdown of context length and token consumption in Bob IDE. |
+| **15** | [`15_task_html_report_consumption_summary.png`](screenshots/15_task_html_report_consumption_summary.png) | **HTML Report Session Consumption** | **Bobcoins: 4.73**<br>Context: 203.9k (76%)<br>Task ID: `436a3c1c81a017...` | Expanded session consumption summary for HTML dashboard and pre-flight verdict task. |
+| **16** | [`16_bob_agent_diff_code_editing.png`](screenshots/16_bob_agent_diff_code_editing.png) | **Bob Agent Mode: Code Diff Editing** | Split diff view<br>Bobcoins: 6.33 | Bob Agent Mode reviewing and applying live code modifications in `guardian.js`. |
+| **17** | [`17_html_dashboard_and_ansi_report_spec.png`](screenshots/17_html_dashboard_and_ansi_report_spec.png) | **HTML Dashboard & ANSI Report Spec** | Dark-mode HTML spec<br>Bobcoins: 4.73 | Implementation summary of ANSI report and interactive HTML scorecard. |
+| **18** | [`18_final_tasks_execution_history.png`](screenshots/18_final_tasks_execution_history.png) | **Tasks History & Milestone Timeline** | Full task history<br>Task completion status | Chronological history of all completed development tasks in Bob IDE. |
 
 ---
 
 ## 🖼️ Featured Visual Evidence
 
-### 1. Bob IDE Session Consumption Summary (Header Expansion)
+### 1. Bob IDE Session Consumption Summary (Task Header Expansion)
 ![Task Session Consumption Summary](screenshots/01_repo_init_and_task_consumption_summary.png)
 
-### 2. Master Tasks Dashboard with Bobcoin Expenditures
+### 2. HTML Report & Verdict Session Consumption Summary (Bobcoins: 4.73)
+![HTML Report Consumption Summary](screenshots/15_task_html_report_consumption_summary.png)
+
+### 3. Bob Agent Mode Live Code Diff Editing
+![Bob Agent Diff Editing](screenshots/16_bob_agent_diff_code_editing.png)
+
+### 4. Master Tasks Dashboard with Bobcoin Expenditures
 ![Bob Tasks Dashboard](screenshots/08_bob_tasks_coin_consumption_dashboard.png)
 
-### 3. Static Security Scanner Detection in Bob Agent Mode
+### 5. Static Security Scanner Detection in Bob Agent Mode
 ![Security Scanner Findings](screenshots/03_task1_security_scanner_findings.png)
 
-### 4. Real-World Validation: Target Repo vs expressjs/cors
+### 6. Real-World Validation: Target Repo vs expressjs/cors
 ![Real-World Comparison](screenshots/05_real_world_validation_cors_comparison.png)
 
-### 5. Interactive HTML Dashboard Generated & Inspected in Bob IDE
+### 7. Interactive HTML Dashboard Generated & Inspected in Bob IDE
 ![HTML Dashboard in Bob IDE](screenshots/10_guardian_html_dashboard_in_bob_ide.png)
 
 ---
